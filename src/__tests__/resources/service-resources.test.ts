@@ -30,6 +30,7 @@ describe('ServiceResources', () => {
       getService: jest.fn(),
       createService: jest.fn(),
       deleteService: jest.fn(),
+      inspectService: jest.fn(),
     } as unknown as jest.Mocked<CoolifyClient>;
     resources = new ServiceResources(mockClient);
   });
@@ -90,6 +91,18 @@ describe('ServiceResources', () => {
 
       expect(result).toEqual(mockResponse);
       expect(mockClient.deleteService).toHaveBeenCalledWith('test-uuid', undefined);
+    });
+  });
+
+  describe('inspectService', () => {
+    it('should inspect a service', async () => {
+      const inspection = { configuration: { key: 'value' }, status: 'ok' };
+      mockClient.inspectService.mockResolvedValue(inspection as any);
+
+      const result = await resources.inspectService('test-uuid');
+
+      expect(result).toEqual(inspection);
+      expect(mockClient.inspectService).toHaveBeenCalledWith('test-uuid');
     });
   });
 });
