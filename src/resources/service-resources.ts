@@ -1,6 +1,6 @@
 import { Resource } from '../lib/resource.js';
 import { CoolifyClient } from '../lib/coolify-client.js';
-import { Service, CreateServiceRequest, DeleteServiceOptions } from '../types/coolify.js';
+import { Service, CreateServiceRequest, DeleteServiceOptions, ServiceInspection } from '../types/coolify.js';
 
 export class ServiceResources {
   private client: CoolifyClient;
@@ -27,5 +27,10 @@ export class ServiceResources {
   @Resource('coolify/services/{id}/delete')
   async deleteService(id: string, options?: DeleteServiceOptions): Promise<{ message: string }> {
     return this.client.deleteService(id, options);
+  }
+
+  @Resource('coolify/services/{id}/inspect')
+  async inspectService(id: string): Promise<ServiceInspection> {
+    return this.client.inspectService(id);
   }
 }

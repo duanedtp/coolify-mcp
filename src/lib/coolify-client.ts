@@ -9,12 +9,16 @@ import {
   CreateProjectRequest,
   UpdateProjectRequest,
   Environment,
+  Resource,
   Deployment,
   Database,
   DatabaseUpdateRequest,
   Service,
   CreateServiceRequest,
   DeleteServiceOptions,
+  Application,
+  CreateApplicationRequest,
+  ServiceInspection,
 } from '../types/coolify.js';
 
 export class CoolifyClient {
@@ -126,6 +130,10 @@ export class CoolifyClient {
     return this.request<Environment>(`/projects/${projectUuid}/${environmentNameOrUuid}`);
   }
 
+  async listEnvironments(): Promise<Environment[]> {
+    return this.request<Environment[]>('/environments');
+  }
+
   async deployApplication(uuid: string): Promise<Deployment> {
     const response = await this.request<Deployment>(`/applications/${uuid}/deploy`, {
       method: 'POST',
@@ -221,5 +229,32 @@ export class CoolifyClient {
     });
   }
 
-  // Add more methods as needed for other endpoints
+  async inspectService(uuid: string): Promise<ServiceInspection> {
+    return this.request<ServiceInspection>(`/services/${uuid}/inspect`);
+  }
+
+  async listResources(): Promise<Resource[]> {
+    return this.request<Resource[]>('/resources');
+  }
+
+  async listApplications(): Promise<Application[]> {
+    return this.request<Application[]>('/applications');
+  }
+
+  async getApplication(uuid: string): Promise<Application> {
+    return this.request<Application>(`/applications/${uuid}`);
+  }
+
+  async createApplication(data: CreateApplicationRequest): Promise<{ uuid: string }> {
+    return this.request<{ uuid: string }>('/applications', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteApplication(uuid: string): Promise<{ message: string }> {
+    return this.request<{ message: string }>(`/applications/${uuid}`, {
+      method: 'DELETE',
+    });
+  }
 }
