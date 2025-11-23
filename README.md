@@ -104,7 +104,7 @@ Here are example prompts you can use with MCP-compatible AI assistants to intera
 "coolify": {
     "command": "npx",
     "args": [
-        "-y", "@masonator/coolify-mcp"
+        "-y", "github:duanedtp/coolify-mcp"
     ],
     "env": {
         "COOLIFY_ACCESS_TOKEN": "0|your-secret-token",
@@ -116,16 +116,24 @@ Here are example prompts you can use with MCP-compatible AI assistants to intera
 #### Cursor
 
 ```bash
-env COOLIFY_ACCESS_TOKEN:0|your-secret-token COOLIFY_BASE_URL:https://your-coolify-instance.com npx -y @stumason/coolify-mcp
+env COOLIFY_ACCESS_TOKEN:0|your-secret-token COOLIFY_BASE_URL:https://your-coolify-instance.com npx -y github:duanedtp/coolify-mcp
 ```
+
+#### VS Code / Codex
+
+See [docs/codex-setup.md](./docs/codex-setup.md) for step-by-step instructions to run the MCP server from VS Code (Codex), including a sample `config.toml` entry.
+
+#### Running via Docker or in Coolify
+
+If you want Codex (or another MCP client) to launch this server from a container image, or to deploy it as a Coolify service, see [docs/coolify-deployment.md](./docs/coolify-deployment.md) for Docker build/run examples and the caveats around stdio-based MCP connectivity.
 
 ## Development
 
 ### Local Setup
 
 ```bash
-# Clone the repository
-git clone https://github.com/stumason/coolify-mcp.git
+# Clone the repository (replace with your fork if different)
+git clone https://github.com/duanedtp/coolify-mcp.git
 cd coolify-mcp
 
 # Install dependencies
