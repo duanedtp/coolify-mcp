@@ -18,6 +18,10 @@ import type {
   Service,
   CreateServiceRequest,
   DeleteServiceOptions,
+  Resource,
+  Application,
+  CreateApplicationRequest,
+  ServiceInspection,
 } from '../types/coolify.js';
 
 const log = debug('coolify:mcp');
@@ -235,6 +239,13 @@ export class CoolifyMcpServer extends McpServer {
       };
     });
 
+    this.tool('list_environments', 'List all Coolify environments', {}, async () => {
+      const environments = await this.client.listEnvironments();
+      return {
+        content: [{ type: 'text', text: JSON.stringify(environments, null, 2) }]
+      };
+    });
+
     this.tool('list_databases', 'List all Coolify databases', {}, async (_args, _extra) => {
       const databases = await this.client.listDatabases();
       return {
@@ -303,6 +314,15 @@ export class CoolifyMcpServer extends McpServer {
       };
     });
 
+    this.tool('inspect_service', 'Inspect a specific Coolify service', {
+      uuid: z.string()
+    }, async (args) => {
+      const inspection = await this.client.inspectService(args.uuid);
+      return {
+        content: [{ type: 'text', text: JSON.stringify(inspection, null, 2) }]
+      };
+    });
+
     this.tool('create_service', 'Create a new Coolify service', {
       type: z.enum(serviceTypes),
       project_uuid: z.string(),
@@ -325,6 +345,53 @@ export class CoolifyMcpServer extends McpServer {
       options: z.object(deleteOptionsSchema).optional()
     }, async (args, _extra) => {
       const result = await this.client.deleteService(args.uuid, args.options);
+      return {
+        content: [{ type: 'text', text: JSON.stringify(result, null, 2) }]
+      };
+    });
+
+    this.tool('list_resources', 'List all Coolify resources', {}, async () => {
+      const resources = await this.client.listResources();
+      return {
+        content: [{ type: 'text', text: JSON.stringify(resources, null, 2) }]
+      };
+    });
+
+    this.tool('list_applications', 'List all Coolify applications', {}, async () => {
+      const applications = await this.client.listApplications();
+      return {
+        content: [{ type: 'text', text: JSON.stringify(applications, null, 2) }]
+      };
+    });
+
+    this.tool('get_application', 'Get details about a specific Coolify application', {
+      uuid: z.string()
+    }, async (args) => {
+      const application = await this.client.getApplication(args.uuid);
+      return {
+        content: [{ type: 'text', text: JSON.stringify(application, null, 2) }]
+      };
+    });
+
+    this.tool('create_application', 'Create a new Coolify application', {
+      name: z.string(),
+      description: z.string().optional(),
+      project_uuid: z.string().optional(),
+      environment_uuid: z.string().optional(),
+      server_uuid: z.string().optional(),
+      repository: z.string().optional(),
+      branch: z.string().optional()
+    }, async (args) => {
+      const application = await this.client.createApplication(args);
+      return {
+        content: [{ type: 'text', text: JSON.stringify(application, null, 2) }]
+      };
+    });
+
+    this.tool('delete_application', 'Delete a Coolify application', {
+      uuid: z.string()
+    }, async (args) => {
+      const result = await this.client.deleteApplication(args.uuid);
       return {
         content: [{ type: 'text', text: JSON.stringify(result, null, 2) }]
       };
@@ -387,6 +454,10 @@ export class CoolifyMcpServer extends McpServer {
     return this.client.getProjectEnvironment(projectUuid, environmentNameOrUuid);
   }
 
+  async list_environments(): Promise<Environment[]> {
+    return this.client.listEnvironments();
+  }
+
   async deploy_application(params: { uuid: string }): Promise<Deployment> {
     return this.client.deployApplication(params.uuid);
   }
@@ -429,5 +500,29 @@ export class CoolifyMcpServer extends McpServer {
 
   async delete_service(uuid: string, options?: DeleteServiceOptions): Promise<{ message: string }> {
     return this.client.deleteService(uuid, options);
+  }
+
+  async inspect_service(uuid: string): Promise<ServiceInspection> {
+    return this.client.inspectService(uuid);
+  }
+
+  async list_resources(): Promise<Resource[]> {
+    return this.client.listResources();
+  }
+
+  async list_applications(): Promise<Application[]> {
+    return this.client.listApplications();
+  }
+
+  async get_application(uuid: string): Promise<Application> {
+    return this.client.getApplication(uuid);
+  }
+
+  async create_application(data: CreateApplicationRequest): Promise<{ uuid: string }> {
+    return this.client.createApplication(data);
+  }
+
+  async delete_application(uuid: string): Promise<{ message: string }> {
+    return this.client.deleteApplication(uuid);
   }
 }

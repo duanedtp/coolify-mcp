@@ -52,6 +52,19 @@ export interface Environment {
   updated_at: string;
 }
 
+export interface Resource {
+  id: number;
+  uuid: string;
+  name: string;
+  type: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  project_uuid?: string;
+  environment_uuid?: string;
+  server_uuid?: string;
+}
+
 export interface Project {
   id: number;
   uuid: string;
@@ -352,10 +365,28 @@ export interface DeleteServiceOptions {
 export interface Application {
   uuid: string;
   name: string;
-  // Add other application properties as needed
+  description?: string;
+  project_uuid?: string;
+  environment_uuid?: string;
+  server_uuid?: string;
+  repository?: string;
+  branch?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface CreateApplicationRequest {
   name: string;
-  // Add other required fields for application creation
+  description?: string;
+  project_uuid?: string;
+  environment_uuid?: string;
+  server_uuid?: string;
+  repository?: string;
+  branch?: string;
+}
+
+export interface ServiceInspection {
+  configuration: Record<string, unknown>;
+  status?: string;
+  message?: string;
 }
