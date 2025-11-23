@@ -2,6 +2,8 @@
 
 You can run this MCP server inside a Coolify project or locally via Docker. MCP clients (Codex, Claude, Cursor) communicate over **stdio**, so the container needs to be started by the client (e.g., `docker run ...` on the same machine as your editor) or via an SSH-capable Coolify service.
 
+> Do I need the Dockerfile? No—Coolify can build directly from the Git repo without a custom Dockerfile. The Dockerfile here exists for local `docker build`/`docker run` workflows and for the Coolify build pipeline if you prefer Docker-based deployments. If Coolify builds from this Dockerfile, make sure `package-lock.json` is present in your branch; the Dockerfile now falls back to `npm install` when a lockfile is missing to avoid the `npm ci` error you may have seen.
+
 ## Build and run locally with Docker
 
 ```bash
